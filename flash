@@ -1,0 +1,25 @@
+#!/bin/sh -ex
+
+fatal()
+{
+  echo "fatal: $1" 1>&2
+  exit 1
+}
+
+if [ $# -ne 1 ]
+then
+  fatal "usage: file.hex"
+fi
+
+FILE="$1"
+shift
+
+exec avrdude \
+  -p atmega2560 \
+  -c wiring \
+  -P /dev/ttyACM0 \
+  -b 115200 \
+  -D \
+  -v \
+  -U flash:w:"${FILE}":i
+

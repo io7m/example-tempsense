@@ -1,0 +1,23 @@
+#!/bin/sh
+
+fatal()
+{
+  echo "fatal: $1" 1>&2
+  exit 1
+}
+
+if [ $# -ne 2 ]
+then
+  fatal "usage: output executable"
+fi
+
+CONF_OUTPUT="$1"
+shift
+CONF_EXECUTABLE="$1"
+shift
+
+CONF_OBJCOPY=$(head -n 1 conf-objcopy) || fatal "could not read conf-objcopy"
+
+mkdir -p $(dirname "${CONF_OUTPUT}") || fatal "could not create output directory"
+
+exec "${CONF_OBJCOPY}" -j .text -j .data -O ihex "${CONF_EXECUTABLE}" "${CONF_OUTPUT}"

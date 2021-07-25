@@ -1,0 +1,22 @@
+#!/bin/sh
+
+fatal()
+{
+  echo "fatal: $1" 1>&2
+  exit 1
+}
+
+if [ $# -lt 2 ]
+then
+  fatal "usage: output [file.o ...]"
+fi
+
+CONF_OUTPUT="$1"
+shift
+
+CONF_LINK=$(head -n 1 conf-cxx-link) || fatal "could not read conf-cxx-link"
+CONF_LINK_FLAGS=$(egrep -v '^#' conf-cxx-link-flags) || fatal "could not read conf-cxx-link-flags"
+
+mkdir -p $(dirname "${CONF_OUTPUT}") || fatal "could not create output directory"
+
+exec ${CONF_LINK} ${CONF_LINK_FLAGS} -o "${CONF_OUTPUT}" $@

@@ -1,0 +1,3 @@
+-target
+avr-unknown-unknown
+-mmcu=atmega2560
